@@ -4,7 +4,7 @@ class Solution {
     public boolean check(int[] nums) {
         int n = nums.length;
 
-        for (int rotations = 0; rotations < n; rotations++) {
+        for (int rotations = 0; rotations <= n; rotations++) {
 
             int sorted[] = new int[n];
             int idx = 0;
