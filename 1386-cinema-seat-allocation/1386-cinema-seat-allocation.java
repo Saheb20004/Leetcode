@@ -1,59 +1,20 @@
 class Solution {
     public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
-
-        int l = 0, r = 0, prev = 0;
-        int sz = reservedSeats.length;
-
-        Arrays.sort(reservedSeats, (a, b) -> a[0] - b[0]);
-
-        boolean[] isReserved = new boolean[11];
-        int ans = 0;
-
-        while (r < sz) {
-
-            // Count rows with no reservations
-            ans += 2 * (reservedSeats[r][0] - prev - 1);
-
-            prev = reservedSeats[r][0];
-
-            // Mark all reserved seats in the current row
-            while (r < sz && reservedSeats[l][0] == reservedSeats[r][0]) {
-                isReserved[reservedSeats[r][1]] = true;
-                r++;
-            }
-
-            // Check the three possible groups
-            boolean twoToFive = check(isReserved, 2, 5);
-            boolean fourToSeven = check(isReserved, 4, 7);
-            boolean sixToNine = check(isReserved, 6, 9);
-
-            // Two non-overlapping groups
-            if (twoToFive && sixToNine) {
-                ans += 2;
-            }
-            // At least one group is available
-            else if (twoToFive || fourToSeven || sixToNine) {
-                ans++;
-            }
-
-            l = r;
-
-            // Reset for the next row
-            Arrays.fill(isReserved, false);
+        Map<Integer, Integer> d = new HashMap<>();
+        for (var e : reservedSeats) {
+            int i = e[0], j = e[1];
+            d.merge(i, 1 << (10 - j), (x, y) -> x | y);
         }
-
-        // Remaining rows are completely empty
-        ans += 2 * (n - prev);
-
+        int[] masks = {0b0111100000, 0b0000011110, 0b0001111000};
+        int ans = (n - d.size()) * 2;
+        for (int x : d.values()) {
+            for (int mask : masks) {
+                if ((x & mask) == 0) {
+                    x |= mask;
+                    ++ans;
+                }
+            }
+        }
         return ans;
-    }
-
-    public boolean check(boolean[] b, int l, int r) {
-        for (int i = l; i <= r; i++) {
-            if (b[i]) {
-                return false;
-            }
-        }
-        return true;
     }
 }
