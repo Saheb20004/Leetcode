@@ -1,14 +1,23 @@
+
+// Approach using HashMap
+// Traverse the array.
+// Store each element's frequency in the map.
+// If any element's frequency becomes greater than n / 2, return it.
+
+
 class Solution {
     public int majorityElement(int[] nums) {
-        int n=nums.length;
-        
-        for(int i=0;i<n;i++){
-            int count=0;
-            for(int j=0;j<n;j++){
-                if(nums[i] == nums[j]) count++;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int n = nums.length;
+
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+
+            if (map.get(num) > n / 2) {
+                return num;
             }
-            if(count > n/2) return nums[i];
         }
+
         return -1;
     }
 }
