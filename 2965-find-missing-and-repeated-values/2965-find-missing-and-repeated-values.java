@@ -1,41 +1,31 @@
-// Extreme Brute Force
-// TC - O(n*n * n*n)
-// SC - O(n*n)
-// Brute Force
-// TC - O(n*n * n * n)
-// SC - O(1)
+// Better Approach using hashing
 
 class Solution {
     public int[] findMissingAndRepeatedValues(int[][] grid) {
             // code here
-            int ans[] = new int[2];
+        int ans[] = new int[2];
             
-            int n = grid.length; // n x n grid
+        int n = grid.length; // n x n grid
             
-            int missing = 0;
-            int duplicate = 0;
-            // Iterate from 1 to n*n and check
-            // if the current number is present
-            for (int num = 1; num <= n*n; num++) {
-                int count = 0;
-
-                for (int i = 0; i < n; i++) {
-                    for (int j = 0; j < n; j++) {
-                        if(grid[i][j] == num)
-                            count ++;
-                    }
-                }
-
-                // If the current number is not present
-                if (count == 0)
-                    missing = num;
-                    
-                else if(count == 2)
-                    duplicate = num;
+        int hash[] = new int[n*n + 1]; // Extra space O(n²)
+        
+        // Mark the frequency in the hash array
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                hash[grid[i][j]]++;
             }
+        }
+        
+        int repeating = -1;
+        int missing = -1;
+        // Finding in the Hash Array
+        for(int i=1;i <= n*n;i++){
+            if(hash[i] == 2)    repeating = i;
+            else if(hash[i] == 0)   missing = i;
+        }
             
-            ans[0]=duplicate;
-            ans[1]=missing;
+        ans[0]=repeating;
+        ans[1]=missing;
 
         return ans;
     }
