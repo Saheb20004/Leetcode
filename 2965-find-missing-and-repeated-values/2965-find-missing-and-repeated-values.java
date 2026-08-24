@@ -1,4 +1,4 @@
-// Better Approach using hashing
+// Optimal Approach using Simple Math 
 
 class Solution {
     public int[] findMissingAndRepeatedValues(int[][] grid) {
@@ -6,26 +6,29 @@ class Solution {
         int ans[] = new int[2];
             
         int n = grid.length; // n x n grid
+        long total = (long)n * n;
             
-        int hash[] = new int[n*n + 1]; // Extra space O(n²)
+        long Sn = ( total * (total+1)) / 2; // Sum of first n² Natural number
+        long Sn2 = ( total * (total+1) * (2*total + 1)) / 6; // Sum of the square of first n² Natural number
         
-        // Mark the frequency in the hash array
+        long S = 0;
+        long S2 = 0;
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                hash[grid[i][j]]++;
+            for (int j = 0; j < n; j++){
+                S += grid[i][j];
+                S2 += (long)grid[i][j]* grid[i][j];
             }
         }
         
-        int repeating = -1;
-        int missing = -1;
-        // Finding in the Hash Array
-        for(int i=1;i <= n*n;i++){
-            if(hash[i] == 2)    repeating = i;
-            else if(hash[i] == 0)   missing = i;
-        }
+        long val1 = S - Sn;// val1    ->  x-y
+        long val2 = S2 - Sn2;// val2    ->  x*x -y*y
+        val2 = val2/val1;// val2    ->  x+y
+        
+        long x = (val1+val2)/2; // x    ->  repeating
+        long y = (val2-val1)/2; // y    ->  missing
             
-        ans[0]=repeating;
-        ans[1]=missing;
+        ans[0]=(int)x;
+        ans[1]=(int)y;
 
         return ans;
     }
