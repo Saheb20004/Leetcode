@@ -8,6 +8,12 @@ class Solution {
         while(low <= high){
             int mid = low + (high-low)/2;
 
+            // If search space is already sorted
+            if(nums[low] <= nums[high]) {
+                ans = Math.min(ans, nums[low]);
+                break;
+            }
+
             // Check If Left Half is Sorted
             if(nums[low] <= nums[mid]){
                 ans = Math.min(ans, nums[low]);
