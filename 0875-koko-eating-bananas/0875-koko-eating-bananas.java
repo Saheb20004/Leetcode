@@ -1,29 +1,41 @@
+// Optimal using Binary Search
+
 class Solution {
     public int minEatingSpeed(int[] piles, int h) {
-        int left=1;
-        int right=Arrays.stream(piles).max().getAsInt();
-        int ans=right;
+        int low=1;
+        int high=Arrays.stream(piles).max().getAsInt();
 
-        while(left <= right){
-            int mid=left+(right-left)/2;
-            if(finishEating(piles,h,mid)){
-                ans=mid;
-                right=mid-1;
+        while(low <= high){
+            int mid = low + (high-low)/2; // Avoid possible integer overflow
+
+            long hours = calculateHours(piles, mid);
+            if(hours <= h){
+                // mid is a possible answer
+                // Try to find a smaller speed
+                high = mid-1;
             }
             else{
-                left=mid+1;
+                low = mid+1;
             }
         }
-        return ans;
+        return low;
     }
     
 
-    private boolean finishEating(int piles[],int h,int k){
-        long hours=0;
-        for(int pile:piles){
-            hours += pile/k;
-            if(pile % k != 0) hours++;
+    private long calculateHours(int piles[], int k){
+        long hours = 0;
+        for(int pile : piles){
+            // Ceiling of pile / k
+            hours += (pile + (long)k - 1) / k;
         }
-        return hours <= h;
+        return hours;
     }
 }
+
+                    // pile = 10, k = 3
+
+                    // 10 / 3 = 3     // integer division, but we need 4 hours
+
+                    // (10 + 3 - 1) / 3
+                    // = 12 / 3
+                    // = 4
