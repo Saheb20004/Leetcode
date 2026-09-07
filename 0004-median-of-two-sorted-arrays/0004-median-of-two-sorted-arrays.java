@@ -4,33 +4,46 @@ class Solution {
         int n = nums2.length;
         int l = m+n;
 
-        int nums[]=new int[m+n];
+        int count = 0;
+        int idx2 = l/2;
+        int idx1= idx2 - 1;
+        int idx1el = -1;
+        int idx2el = -1;
+
         int i=0,j=0,k=0;
         while(i<m && j<n){
             if(nums1[i] < nums2[j]) {
-                nums[k++] = nums1[i];
+                if(count == idx1)    idx1el = nums1[i];
+                if(count == idx2)    idx2el = nums1[i];
+                count ++;
                 i++;
             }
             else{
-                nums[k++] = nums2[j];
+                if(count == idx1)    idx1el = nums2[j];
+                if(count == idx2)    idx2el = nums2[j];
+                count ++;
                 j++;
             }
         }
 
         while(i < m){
-            nums[k++] = nums1[i];
+            if(count == idx1)    idx1el = nums1[i];
+            if(count == idx2)    idx2el = nums1[i];
+            count ++;
             i++;
         }
         while(j < n){
-            nums[k++] = nums2[j];
-            j++;
+           if(count == idx1)    idx1el = nums2[j];
+           if(count == idx2)    idx2el = nums2[j];
+           count ++;
+           j++;
         }
 
         if( l % 2 == 1){
-            return (double) nums[l / 2];
+            return (double) idx2el;
         }
         else{
-            double ans = (double) nums[l / 2] + nums[l / 2  -  1];
+            double ans = (double) idx2el + idx1el;
             return ans / 2;
         }
     }
