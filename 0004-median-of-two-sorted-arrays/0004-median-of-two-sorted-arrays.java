@@ -1,50 +1,63 @@
+// Optimal using Binary Search Algo
+// TC   ->  O( min(log n, log m) ),     SC -> O(1)
+
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+
+        // Always perform binary search on the smaller array
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
         int m = nums1.length;
         int n = nums2.length;
-        int l = m+n;
 
-        int count = 0;
-        int idx2 = l/2;
-        int idx1= idx2 - 1;
-        int idx1el = -1;
-        int idx2el = -1;
+        // Number of elements that should be present in the left half
+        int leftSize = (m + n + 1) / 2;
 
-        int i=0,j=0,k=0;
-        while(i<m && j<n){
-            if(nums1[i] < nums2[j]) {
-                if(count == idx1)    idx1el = nums1[i];
-                if(count == idx2)    idx2el = nums1[i];
-                count ++;
-                i++;
+        int low = 0;
+        int high = m;
+
+        while (low <= high) {
+
+            // Partition nums1
+            int mid1 = low + (high - low) / 2;
+
+            // Partition nums2
+            int mid2 = leftSize - mid1;
+
+            // Boundary elements
+            int l1 = (mid1 == 0) ? Integer.MIN_VALUE : nums1[mid1 - 1];
+            int r1 = (mid1 == m) ? Integer.MAX_VALUE : nums1[mid1];
+
+            int l2 = (mid2 == 0) ? Integer.MIN_VALUE : nums2[mid2 - 1];
+            int r2 = (mid2 == n) ? Integer.MAX_VALUE : nums2[mid2];
+
+            // Correct partition
+            if (l1 <= r2 && l2 <= r1) {
+
+                // Odd total number of elements
+                if ((m + n) % 2 == 1) {
+                    return Math.max(l1, l2);
+                }
+
+                // Even total number of elements
+                return (Math.max(l1, l2) + (double) Math.min(r1, r2)) / 2.0;
             }
-            else{
-                if(count == idx1)    idx1el = nums2[j];
-                if(count == idx2)    idx2el = nums2[j];
-                count ++;
-                j++;
+
+            // l1 is too large
+            // Move partition of nums1 to the left
+            else if (l1 > r2) {
+                high = mid1 - 1;
+            }
+
+            // l2 is too large
+            // Move partition of nums1 to the right
+            else { // l2 > r1
+                low = mid1 + 1;
             }
         }
 
-        while(i < m){
-            if(count == idx1)    idx1el = nums1[i];
-            if(count == idx2)    idx2el = nums1[i];
-            count ++;
-            i++;
-        }
-        while(j < n){
-           if(count == idx1)    idx1el = nums2[j];
-           if(count == idx2)    idx2el = nums2[j];
-           count ++;
-           j++;
-        }
-
-        if( l % 2 == 1){
-            return (double) idx2el;
-        }
-        else{
-            double ans = (double) idx2el + idx1el;
-            return ans / 2;
-        }
+        return 0.0;
     }
 }
