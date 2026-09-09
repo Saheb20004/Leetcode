@@ -5,31 +5,20 @@ class Solution {
             return false;
         }
 
-        HashMap<Character, Character> mapST = new HashMap<>(); // s -> t map
-        HashMap<Character, Character> mapTS = new HashMap<>(); // t -> s map
+        int[] mapST = new int[256];
+        int[] mapTS = new int[256];
 
         for (int i = 0; i < s.length(); i++) {
 
             char c1 = s.charAt(i);
             char c2 = t.charAt(i);
 
-            // Check s -> t mapping
-            if (mapST.containsKey(c1)) {
-                if (mapST.get(c1) != c2) {
-                    return false;
-                }
+            if (mapST[c1] != mapTS[c2]) {
+                return false;
             }
 
-            // Check t -> s mapping
-            if (mapTS.containsKey(c2)) {
-                if (mapTS.get(c2) != c1) {
-                    return false;
-                }
-            }
-
-            // Create the mapping
-            mapST.put(c1, c2);
-            mapTS.put(c2, c1);
+            mapST[c1] = i + 1;
+            mapTS[c2] = i + 1;
         }
 
         return true;
