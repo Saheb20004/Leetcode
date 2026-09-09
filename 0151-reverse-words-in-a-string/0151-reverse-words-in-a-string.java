@@ -1,44 +1,39 @@
 class Solution {
-
     public String reverseWords(String s) {
 
-        // Remove leading/trailing spaces
-        // and reduce multiple spaces to single spaces
-        s = s.trim().replaceAll("\\s+", " ");
+        StringBuilder ans = new StringBuilder();
 
-        char[] arr = s.toCharArray();
+        int i = s.length() - 1;
 
-        // Step 1: Reverse the whole string
-        reverse(arr, 0, arr.length - 1);
+        while (i >= 0) {
 
-        // Step 2: Reverse each individual word
-        int start = 0;
-
-        for (int i = 0; i <= arr.length; i++) {
-
-            // End of a word
-            if (i == arr.length || arr[i] == ' ') {
-
-                reverse(arr, start, i - 1);
-
-                start = i + 1;
+            // Skip spaces
+            while (i >= 0 && s.charAt(i) == ' ') {
+                i--;
             }
+
+            // No more words
+            if (i < 0) {
+                break;
+            }
+
+            // Find the end of the word
+            int end = i;
+
+            // Move to the beginning of the word
+            while (i >= 0 && s.charAt(i) != ' ') {
+                i--;
+            }
+
+            // Add space between words
+            if (ans.length() > 0) {
+                ans.append(' ');
+            }
+
+            // Add the word
+            ans.append(s.substring(i + 1, end + 1));
         }
 
-        return new String(arr);
-    }
-
-    // Function to reverse characters from start to end
-    private void reverse(char[] arr, int start, int end) {
-
-        while (start < end) {
-
-            char temp = arr[start];
-            arr[start] = arr[end];
-            arr[end] = temp;
-
-            start++;
-            end--;
-        }
+        return ans.toString();
     }
 }
