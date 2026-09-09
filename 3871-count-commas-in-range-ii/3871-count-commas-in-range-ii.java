@@ -1,32 +1,19 @@
 class Solution {
     public long countCommas(long n) {
-        long count = 0;
+        long ans = 0;
+        long threshold = 1000;
 
-        // 1,000 to 999,999
-        if (n >= 1000) {
-            count += Math.min(n, 999999L) - 1000 + 1;
+        while (threshold <= n) {
+            ans += n - threshold + 1;
+
+            if (threshold > n / 1000) {
+                break;
+            }
+
+            threshold *= 1000;
         }
 
-        // 1,000,000 to 999,999,999
-        if (n >= 1000000) {
-            count += (Math.min(n, 999999999L) - 1000000 + 1) * 2;
-        }
+        return ans;
 
-        // 1,000,000,000 to 999,999,999,999
-        if (n >= 1000000000L) {
-            count += (Math.min(n, 999999999999L) - 1000000000L + 1) * 3;
-        }
-
-        // 1,000,000,000,000 to 999,999,999,999,999
-        if (n >= 1000000000000L) {
-            count += (Math.min(n, 999999999999999L) - 1000000000000L + 1) * 4;
-        }
-
-        // 1,000,000,000,000,000 and above
-        if (n >= 1000000000000000L) {
-            count += (n - 1000000000000000L + 1) * 5;
-        }
-
-        return count;
     }
 }
