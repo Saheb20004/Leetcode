@@ -1,29 +1,27 @@
-// Better Approach Using HashMap
+// Optimal Approach
 
 class Solution {
     public boolean isAnagram(String s, String t) {
-        // Edge Case
+
         if (s.length() != t.length()) {
             return false;
         }
 
-        HashMap<Character, Integer> map = new HashMap<>();
+        int[] count = new int[26];
 
-        // Count characters in s
+        // Add frequency of characters from s
         for (char ch : s.toCharArray()) {
-            map.put(ch, map.getOrDefault(ch, 0) + 1); // Increment count of characters
+            count[ch - 'a']++;
         }
 
-        // Remove characters using t
+        // Subtract frequency of characters from t
         for (char ch : t.toCharArray()) {
+            count[ch - 'a']--;
+        }
 
-            if (!map.containsKey(ch)) { // If key does not exist
-                return false;
-            }
-
-            map.put(ch, map.get(ch) - 1); // Decrement count of characters
-
-            if (map.get(ch) < 0) { // If Charater count becomes negative
+        // Check if all frequencies are zero
+        for (int i = 0; i < 26; i++) {
+            if (count[i] != 0) {
                 return false;
             }
         }
