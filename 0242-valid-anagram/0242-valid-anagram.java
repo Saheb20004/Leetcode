@@ -1,18 +1,33 @@
+// Better Approach Using HashMap
+
 class Solution {
     public boolean isAnagram(String s, String t) {
-        // Base case
-        if(s.length() != t.length()) return false;
+        // Edge Case
+        if (s.length() != t.length()) {
+            return false;
+        }
 
-        char sArr[]=s.toCharArray(); // convert string to character array
-        Arrays.sort(sArr); // sort the array
-        String sortedS=new String(sArr); // then convert back the array into string
+        HashMap<Character, Integer> map = new HashMap<>();
 
-        char tArr[]=t.toCharArray();
-        Arrays.sort(tArr);
-        String sortedT=new String(tArr);
+        // Count characters in s
+        for (char ch : s.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1); // Increment count of characters
+        }
 
-        if(sortedS.equals(sortedT)) return true;
+        // Remove characters using t
+        for (char ch : t.toCharArray()) {
 
-        return false;
+            if (!map.containsKey(ch)) { // If key does not exist
+                return false;
+            }
+
+            map.put(ch, map.get(ch) - 1); // Decrement count of characters
+
+            if (map.get(ch) < 0) { // If Charater count becomes negative
+                return false;
+            }
+        }
+
+        return true;
     }
 }
