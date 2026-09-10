@@ -2,59 +2,45 @@ class Solution {
 
     public String longestPalindrome(String s) {
         int n = s.length();
+
         // Edge case
         if (n <= 1) {
             return s;
         }
 
-        // dp[left][right]
-        // null  -> not calculated
-        // true  -> palindrome
-        // false -> not palindrome
-        Boolean[][] dp = new Boolean[n][n];
+        // dp[i][j] = true if s[i...j] is a palindrome
+        boolean[][] dp = new boolean[n][n];
 
         int start = 0;
         int maxLen = 1;
 
-        // Try every possible substring
+        // Every single character is a palindrome
         for (int i = 0; i < n; i++) {
-            for (int j = i; j < n; j++) {
+            dp[i][i] = true;
+        }
 
-                if (isPalindrome(s, i, j, dp)) {
-                    int len = j - i + 1;
+        // Length of substring
+        for (int len = 2; len <= n; len++) {
+            // Starting index
+            for (int i = 0; i <= n - len; i++) {
+                // Ending index
+                int j = i + len - 1;
+                // Check first and last characters
+                if (s.charAt(i) == s.charAt(j)) {
+                    // Length 2: "aa"
+                    // Length > 2: check inside substring
+                    if (len == 2 || dp[i + 1][j - 1]) {
+                        dp[i][j] = true;
 
-                    if (len > maxLen) {
-                        maxLen = len;
-                        start = i;
+                        if (len > maxLen) {
+                            maxLen = len;
+                            start = i;
+                        }
                     }
                 }
             }
         }
 
         return s.substring(start, start + maxLen);
-    }
-
-    private boolean isPalindrome(String s, int left, int right, Boolean[][] dp) {
-
-        // Base case
-        if (left >= right) {
-            return true;
-        }
-
-        // Already calculated
-        if (dp[left][right] != null) {
-            return dp[left][right];
-        }
-
-        // First and last characters don't match
-        if (s.charAt(left) != s.charAt(right)) {
-            dp[left][right] = false;
-            return false;
-        }
-
-        // Check the inside recursively
-        dp[left][right] = isPalindrome(s, left + 1, right - 1, dp);
-
-        return dp[left][right];
     }
 }
