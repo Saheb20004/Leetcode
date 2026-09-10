@@ -1,39 +1,30 @@
-// Better Approach
-// TC -> O(26 * n²),     SC -> O(26)=O(1)
-
 class Solution {
 
     public int beautySum(String s) {
+
         int n = s.length();
         int ans = 0;
 
-        // Generate every substring
         for (int i = 0; i < n; i++) {
-            // Frequency array for current substring
-            int[] freq = new int[26];
+            HashMap<Character, Integer> map = new HashMap<>();
 
             for (int j = i; j < n; j++) {
-                // Add current character
-                int index = s.charAt(j) - 'a';
-                freq[index]++;
+                char ch = s.charAt(j);
+                // Update frequency
+                map.put(ch, map.getOrDefault(ch, 0) + 1);
 
-                // Find maximum and minimum frequency
                 int maxFreq = 0;
                 int minFreq = Integer.MAX_VALUE;
 
-                for (int k = 0; k < 26; k++) {
-
-                    if (freq[k] > 0) {
-                        maxFreq = Math.max(maxFreq, freq[k]);
-                        minFreq = Math.min(minFreq, freq[k]);
-                    }
+                // Find max and min frequency
+                for (int freq : map.values()) {
+                    maxFreq = Math.max(maxFreq, freq);
+                    minFreq = Math.min(minFreq, freq);
                 }
-
-                // Calculate beauty
+                // Beauty
                 ans += maxFreq - minFreq;
             }
         }
-
         return ans;
     }
 }
