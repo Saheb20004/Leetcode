@@ -1,3 +1,6 @@
+// Better Approach
+// TC -> O(26 * n²),     SC -> O(26)=O(1)
+
 class Solution {
 
     public int beautySum(String s) {
@@ -6,15 +9,13 @@ class Solution {
 
         // Generate every substring
         for (int i = 0; i < n; i++) {
-            for (int j = i; j < n; j++) {
-                // Frequency array for current substring
-                int[] freq = new int[26];
+            // Frequency array for current substring
+            int[] freq = new int[26];
 
-                // Count frequency of characters
-                for (int k = i; k <= j; k++) {
-                    int index = s.charAt(k) - 'a';
-                    freq[index]++;
-                }
+            for (int j = i; j < n; j++) {
+                // Add current character
+                int index = s.charAt(j) - 'a';
+                freq[index]++;
 
                 // Find maximum and minimum frequency
                 int maxFreq = 0;
