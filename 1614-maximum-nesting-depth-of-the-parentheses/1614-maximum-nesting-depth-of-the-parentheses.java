@@ -2,7 +2,7 @@ class Solution {
     public int maxDepth(String s) {
         int n = s.length();
 
-        Stack<Character> st = new Stack<>();
+        // Stack<Character> st = new Stack<>();
 
         int count = 0;
         int maxCount = 0;
@@ -11,13 +11,13 @@ class Solution {
             char ch = s.charAt(i);
 
             if( ch == '(' ){
-                st.push(ch);
+                // st.push(ch);
                 count ++;
                 maxCount = Math.max(count, maxCount);
             }
 
-            else if( ch == ')' && !st.isEmpty() ){
-                st.pop();
+            else if( ch == ')' ){
+                // st.pop();
                 count --;
             }
         }
