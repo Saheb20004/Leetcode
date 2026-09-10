@@ -1,39 +1,34 @@
+// Optimal using HashMap + ProrityQueue
+
 class Solution {
     public String frequencySort(String s) {
 
-        int[] freq = new int[123];
+        // Step 1: Count frequency
+        HashMap<Character, Integer> map = new HashMap<>();
 
-        // Count frequency
         for (char ch : s.toCharArray()) {
-            freq[ch]++;
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
         }
 
+        // Step 2: Create max heap
+        PriorityQueue<Character> pq = new PriorityQueue<>(
+            (a, b) -> map.get(b) - map.get(a)
+        );
+
+        // Add all characters
+        pq.addAll(map.keySet());
+
+        // Step 3: Build answer
         StringBuilder ans = new StringBuilder();
 
-        for (int count = 0; count < s.length(); count++) {
+        while (!pq.isEmpty()) {
 
-            int maxFreq = 0;
-            int maxChar = -1;
+            char ch = pq.poll();
+            int freq = map.get(ch);
 
-            // Find character having maximum frequency
-            for (int i = 0; i < 123; i++) {
-                if (freq[i] > maxFreq) {
-                    maxFreq = freq[i];
-                    maxChar = i;
-                }
+            for (int i = 0; i < freq; i++) {
+                ans.append(ch);
             }
-
-            if (maxChar == -1) {
-                break;
-            }
-
-            // Add character maxFreq times
-            for (int i = 0; i < maxFreq; i++) {
-                ans.append((char) maxChar);
-            }
-
-            // Mark character as processed
-            freq[maxChar] = 0;
         }
 
         return ans.toString();
