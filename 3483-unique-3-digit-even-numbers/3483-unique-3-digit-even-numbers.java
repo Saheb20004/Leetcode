@@ -1,27 +1,53 @@
-// Brute Force Approach
-// TC -> O(n³ + k * log k) ,    k -> no. of unique 3-digit even elements
-// SC -> O(k)
+// Optimal Approach
+// TC -> O(9 * 10 * 5 + 10*n)   10*n -> for frequency counting
+// SC -> O(1)
 
 class Solution {
     public int totalNumbers(int[] digits) {
         int n = digits.length;
         int num = 0;
+        int l = 0;
+        int count = 0;
 
-        Set<Integer> set = new HashSet<>();
-
-        for(int i=0;i<n;i++){
+        // Build frequency map Array
+        int map[] = new int[10];
+        for(int i=0;i <= 9;i++){
             for(int j=0;j<n;j++){
-                for(int k=0;k<n;k++){
-                    if(i == j || j == k || i == k){
-                        continue;
-                    }
-                    num = digits[i] * 100 + digits[j] * 10 + digits[k];
-                    if(num >= 100 && num % 2 == 0){ // Check for Even && no leading zeros
-                        set.add(num);
-                    }
+                if(digits[j] == i){
+                    map[i] ++;
                 }
             }
         }
-        return set.size();
+
+        // Hundreds digit
+        for(int i = 1; i <= 9; i++){
+            if(map[i] == 0){
+                continue;
+            }
+            map[i] --;
+            // Tens digit
+            for(int j = 0; j <= 9; j++){
+                if(map[j] == 0){
+                    continue;
+                }
+                map[j] --;
+                // Units digit must be even
+                for(int k = 0; k <= 8; k += 2){
+                    if(map[k] == 0){
+                        continue;
+                    }
+                    map[k] --;
+                    
+                    num = (i * 100) + (j * 10) + k;
+                    
+                    count ++;
+
+                    map[k] ++;
+                }
+                map[j] ++;
+            }
+            map[i] ++;
+        }
+        return count;
     }
 }
