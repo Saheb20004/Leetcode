@@ -1,31 +1,42 @@
 class Solution {
     public int[] sortEvenOdd(int[] nums) {
+
         int n = nums.length;
-        int arr[] = new int[n];
 
-        // Even indices increasing
-        for(int i=0; i < n-2; i += 2){
-            for(int j=i+2; j < n; j += 2){
-                if(nums[i] > nums[j]){
-                    swap(nums,i,j);
-                }
+        int[] even = new int[(n + 1) / 2];
+        int[] odd = new int[n / 2];
+
+        int e = 0;
+        int o = 0;
+
+        // Separate even and odd indexed elements
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                even[e++] = nums[i];
+            } else {
+                odd[o++] = nums[i];
             }
         }
 
-        // Odd decreasing
-        for(int i=1; i < n-2; i += 2){
-            for(int j=i+2; j < n; j += 2){
-                if(nums[i] < nums[j]){
-                    swap(nums,i,j);
-                }
+        // Sort even elements ascending
+        Arrays.sort(even);
+
+        // Sort odd elements ascending first
+        Arrays.sort(odd);
+
+        // Put them back
+        e = 0;
+        o = odd.length - 1;
+
+        for (int i = 0; i < n; i++) {
+
+            if (i % 2 == 0) {
+                nums[i] = even[e++];
+            } else {
+                nums[i] = odd[o--];
             }
         }
+
         return nums;
-    }
-
-    private void swap(int arr[], int i, int j){
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 }
