@@ -22,20 +22,16 @@ public class Solution {
             slow = slow.next;
             fast = fast.next.next;
 
-            if(slow == fast) break; //Cycle detected
+            if(slow == fast) { //Cycle detected
+                slow = head;
+                while(slow != fast){ // Phase 2: Find the starting point of the cycle
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            } 
         }
-
-        // No cycle
-        if (fast == null || fast.next == null) {
-            return null;
-        }
-
-        // Phase 2: Find the starting point of the cycle
-        slow = head;
-         while(slow != fast){
-            slow = slow.next;
-            fast = fast.next;
-         }
-         return slow;
+        // No Cycle
+        return null;
     }
 }
