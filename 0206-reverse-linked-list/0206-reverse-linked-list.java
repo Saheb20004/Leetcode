@@ -15,29 +15,22 @@ class Solution {
             return null;
         }
 
-        Stack<ListNode> st = new Stack<>();
+        Stack<Integer> st = new Stack<>();
 
         ListNode temp = head;
 
         // Push all nodes into stack
         while (temp != null) {
-            st.push(temp);
+            st.push(temp.val);
             temp = temp.next;
         }
-
-        // First node of reversed list
-        ListNode newHead = st.pop();
-        temp = newHead;
+        temp = head;
 
         // Connect nodes in reverse order
-        while (!st.isEmpty()) {
-            temp.next = st.pop();
+        while (temp != null) {
+            temp.val = st.pop();
             temp = temp.next;
         }
-
-        // Last node must point to null
-        temp.next = null;
-
-        return newHead;
+        return head;
     }
 }
