@@ -22,13 +22,11 @@ class Solution {
         
         int midNode = count/2;
         temp = head;
-        while(temp != null){
-            midNode -= 1;
-            if(midNode == 0){
-                break;
-            }
+        while (midNode > 1) {
             temp = temp.next;
+            midNode--;
         }
+        
         temp.next = temp.next.next;
 
         return head;
