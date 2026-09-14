@@ -15,24 +15,42 @@ public class Solution {
         if (headA == null || headB == null) {
             return null;
         }
-        
-        Map<ListNode, Integer> map = new HashMap<>();
 
-         // Store every node of list A into a HashMap named map
-        ListNode temp = headA;
-        while(temp != null){
-            map.put(temp,1);
-            temp = temp.next;
+         // Traverse list A
+        int countA = 0;
+        ListNode tempA = headA;
+        while(tempA != null){
+            countA ++;
+            tempA = tempA.next;
         }
 
-        temp = headB; // Traverse list B
-        while(temp != null){
-            if(map.containsKey(temp)){ // Same node object found
-                return temp;
-            }
-            temp = temp.next;
+        // Traverse list B
+        int countB = 0;
+        ListNode tempB = headB; 
+        while(tempB != null){
+            countB ++;
+            tempB = tempB.next;
         }
 
-        return null;
+        if(countA < countB){
+            return collisionPoint(headA, headB, countB-countA);
+        }
+        else{
+            return collisionPoint(headB, headA, countA-countB);
+        }
+    }
+
+    private ListNode collisionPoint(ListNode tempA, ListNode tempB, int d){ 
+        // d -> tempB - tempA
+        while(d > 0){
+            d --;
+            tempB = tempB.next;
+        }
+
+        while(tempA != tempB){
+            tempA = tempA.next;
+            tempB = tempB.next;
+        }
+        return tempA;
     }
 }
