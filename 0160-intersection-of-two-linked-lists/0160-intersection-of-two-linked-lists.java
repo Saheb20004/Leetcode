@@ -9,6 +9,7 @@
  *     }
  * }
  */
+ 
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         // Only check if the heads themselves are null
@@ -16,41 +17,19 @@ public class Solution {
             return null;
         }
 
-         // Traverse list A
-        int countA = 0;
+         // Traverse list A & List B simultaneously
         ListNode tempA = headA;
-        while(tempA != null){
-            countA ++;
-            tempA = tempA.next;
-        }
-
-        // Traverse list B
-        int countB = 0;
-        ListNode tempB = headB; 
-        while(tempB != null){
-            countB ++;
-            tempB = tempB.next;
-        }
-
-        if(countA < countB){
-            return collisionPoint(headA, headB, countB-countA);
-        }
-        else{
-            return collisionPoint(headB, headA, countA-countB);
-        }
-    }
-
-    private ListNode collisionPoint(ListNode tempA, ListNode tempB, int d){ 
-        // d -> tempB - tempA
-        while(d > 0){
-            d --;
-            tempB = tempB.next;
-        }
-
+        ListNode tempB = headB;
         while(tempA != tempB){
             tempA = tempA.next;
             tempB = tempB.next;
+
+            if(tempA == tempB)  return tempA;
+
+            if(tempA == null)   tempA = headB;
+            if(tempB == null)   tempB = headA;
         }
+
         return tempA;
     }
 }
