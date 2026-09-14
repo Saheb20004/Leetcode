@@ -10,37 +10,21 @@
  */
 class Solution {
     public ListNode oddEvenList(ListNode head) {
-
         // Edge Case
-        if(head == null || head.next == null){
-            return head;
-        }
-        
-        ArrayList<Integer> list = new ArrayList<>();
+        if(head == null || head.next == null) return head;
 
-        // Add odd index elements into the list
-        ListNode temp = head;
-        while(temp != null && temp.next != null){
-            list.add(temp.val);
-            temp = temp.next.next;
-        }
-        if(temp != null)    list.add(temp.val);
+        ListNode odd = head;
+        ListNode even = head.next;
+        ListNode evenHead = head.next;
 
-        // Add even index elements into the list
-        temp = head.next;
-        while(temp != null && temp.next != null){
-            list.add(temp.val);
-            temp = temp.next.next;
-        }
-        if(temp != null)    list.add(temp.val);
+        while(even != null && even.next != null){
+            odd.next = odd.next.next;
+            even.next = even.next.next;
 
-        // Replace the node values with the stored list values
-        int i=0;
-        temp = head;
-        while(temp != null){
-            temp.val = list.get(i++);
-            temp = temp.next;
+            odd = odd.next;
+            even = even.next;
         }
+        odd.next = evenHead;
 
         return head;
     }
