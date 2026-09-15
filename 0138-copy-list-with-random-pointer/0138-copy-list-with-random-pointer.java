@@ -13,41 +13,76 @@ class Node {
 }
 */
 
-
-// First pass → create a copy of every node and store:
-// original node -> copied node
-// Second pass → connect next and random using the map.
-
 class Solution {
+
     public Node copyRandomList(Node head) {
         // Edge Case
-        if (head == null) {
-            return null;
-        }
+        if (head == null) return null;
 
-        // original node -> copied node
-        HashMap<Node, Node> map = new HashMap<>();
+        // Step 1: Create and interleave copied nodes
+        insertCopyNodes(head);
+        // Step 2: Assign random pointers
+        connectRandomPointers(head);
+        // Step 3: Assign next pointers & Separate original and copied lists
+        return separateLists(head);
+    }
 
-        // First pass: create all copied nodes
+    // --------------STEP 1 -------------
+    // Original : 7 -> 13 -> 11 -> 10 -> 1
+    // After this : 7 -> 7' -> 13 -> 13' -> 11 -> 11' -> 10 -> 10' -> 1 -> 1'
+    private void insertCopyNodes(Node head) {
+
         Node temp = head;
         while (temp != null) {
-            Node newNode = new Node(temp.val);
-            map.put(temp, newNode);
+            Node copyNode = new Node(temp.val);
 
-            temp = temp.next;
+            copyNode.next = temp.next;
+            temp.next = copyNode;
+
+            temp = copyNode.next;
         }
-
-        // Second pass: connect next and random
-        temp = head;
-        while (temp != null) {
-            Node copyNode = map.get(temp);
-
-            copyNode.next = map.get(temp.next);
-            copyNode.random = map.get(temp.random);
-
-            temp = temp.next;
-        }
-
-        return map.get(head);
     }
+
+    // STEP 2 - Since copy of every node is immediately after it:
+    
+    // temp.random       -> original random node
+    // temp.random.next  -> copied random node
+    private void connectRandomPointers(Node head) {
+
+        Node temp = head;
+        while (temp != null) {
+            Node copyNode = temp.next;
+
+            if (temp.random != null) {
+                copyNode.random = temp.random.next;
+            }
+
+            temp = copyNode.next;
+        }
+    }
+
+    // STEP 3 - Separate:
+    
+    // Original: 7 -> 13 -> 11 -> 10 -> 1
+    // Copy:     7' -> 13' -> 11' -> 10' -> 1'
+    private Node separateLists(Node head) {
+
+        Node temp = head;
+        Node copyHead = head.next;
+
+        while (temp != null) {
+            Node copyNode = temp.next;
+            // Restore original list
+            temp.next = copyNode.next;
+            // Connect copied list
+            if (copyNode.next != null) {
+                copyNode.next = copyNode.next.next;
+            }
+
+            temp = temp.next;
+        }
+
+        return copyHead;
+    }
+    
 }
