@@ -16,20 +16,14 @@ class Solution {
 
 
     private long power(long base, long exp) {
+        // Base Case
+        if(exp == 0) return 1;
+        if(exp == 1) return base % MOD;
 
-        long ans = 1;
-
-        while (exp > 0) {
-
-            if (exp % 2 == 1) {
-                ans = (ans * base) % MOD;
-                exp --;
-            }
-
-            base = (base * base) % MOD;
-            exp = exp / 2;
+        if (exp % 2 == 1) { // n is odd
+            return (base * power(base, exp-1)) % MOD;
         }
-
-        return ans;
+        // n is even
+        return power( (base * base) % MOD, exp/2 );
     }
 }
