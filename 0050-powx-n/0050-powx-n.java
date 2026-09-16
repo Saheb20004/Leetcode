@@ -1,30 +1,32 @@
 class Solution {
-    public double myPow(double x, int n) {
 
+    public double myPow(double x, int n) {
         long pow = n;
 
-        if (pow < 0) {
+        // Handle negative exponent
+        if (pow < 0)
             pow = -pow;
-        }
 
-        double ans = 1.0;
-
-        while (pow > 0) {
-
-            if (pow % 2 == 1) {
-                ans = ans * x;
-                pow--;
-            } 
-            else {
-                x = x * x;
-                pow = pow / 2;
-            }
-        }
+        double ans = power(x, pow);
 
         if (n < 0) {
             return 1.0 / ans;
         }
 
         return ans;
+    }
+
+    private double power(double x, long n) {
+        // Base case
+        if(n == 0)  return 1.0;
+        if(n == 1)  return x;
+
+        // If exponent is odd
+        if (n % 2 == 1) {
+            return x * power(x, n-1);
+        }
+
+        // If exponent is even
+        return power(x * x, n / 2);
     }
 }
