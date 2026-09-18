@@ -13,25 +13,28 @@
  *     }
  * }
  */
- 
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> list = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
 
-        inorder(root, list);
-        return list;
-    }
+        TreeNode curr = root;
 
-    private void inorder(TreeNode root, List<Integer> list) {
-        // Base Case
-        if (root == null) {
-            return;
+        while (curr != null || !stack.isEmpty()) {
+
+            // 1. Go as far left as possible
+            while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            // 2. Process the node
+            curr = stack.pop();
+            result.add(curr.val);
+
+            // 3. Move to the right subtree
+            curr = curr.right;
         }
-        // Left
-        inorder(root.left, list);
-        // Root
-        list.add(root.val);
-        // Right
-        inorder(root.right, list);
+        return result;
     }
 }
