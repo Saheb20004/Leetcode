@@ -1,51 +1,48 @@
-// Idea: Maintain two values:
-// - min = minimum possible number of unmatched (.
-// - max = maximum possible number of unmatched (.
-// For *:
-// - For minimum balance, treat * as ).
-// - For maximum balance, treat * as (.
-
 class Solution {
     public boolean checkValidString(String s) {
-        int min = 0, max = 0;
+
+        Stack<Integer> openStack = new Stack<>();
+        Stack<Integer> starStack = new Stack<>();
 
         for (int i = 0; i < s.length(); i++) {
-            min += s.charAt(i) == '(' ? 1 : -1;
-            max += s.charAt(i) == ')' ? -1 : 1;
 
-            if (max < 0) return false;
+            char ch = s.charAt(i);
 
-            min = Math.max(min, 0);
+            if (ch == '(') {
+                openStack.push(i);
+            }
+
+            else if (ch == '*') {
+                starStack.push(i);
+            }
+
+            else { // ch == ')'
+
+                if (!openStack.isEmpty()) {
+                    openStack.pop();
+                }
+                else if (!starStack.isEmpty()) {
+                    starStack.pop();
+                }
+                else {
+                    return false;
+                }
+            }
         }
 
-        return min == 0;
+        // Match remaining '(' with '*'
+        while (!openStack.isEmpty() && !starStack.isEmpty()) {
+
+            int openIndex = openStack.pop();
+            int starIndex = starStack.pop();
+
+            // '*' must come after '('
+            if (openIndex > starIndex) {
+                return false;
+            }
+        }
+
+        // If '(' are still remaining, they cannot be matched
+        return openStack.isEmpty();
     }
 }
-
-
-
-// Algorithm checkValidString(s):
-
-//     min = 0
-//     max = 0
-
-//     for each character ch in s:
-
-//         if ch == '(':
-//             min++
-//             max++
-
-//         else if ch == ')':
-//             min--
-//             max--
-
-//         else if ch == '*':
-//             min--
-//             max++
-
-//         if max < 0:
-//             return false
-
-//         min = max(min, 0)
-
-//     return min == 0
