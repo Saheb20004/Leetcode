@@ -13,25 +13,43 @@
  *     }
  * }
  */
+
 class Solution {
+
     public List<Integer> rightSideView(TreeNode root) {
-        List<Integer> list = new ArrayList<>();
 
-        return helper(root, 0, list);
-    }
-
-    private List<Integer> helper(TreeNode node, int level, List<Integer> list){         
+        List<Integer> result = new ArrayList<>();
         // Base Case
-        if(node == null)    return list;
-
-         // First node encountered at current level
-        if(level == list.size()){
-            list.add(node.val);
+        if (root == null) {
+            return result;
         }
 
-        helper(node.right, level+1, list); // Add Right Child First
-        helper(node.left, level+1, list); // Then Add Left Child
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
 
-        return list;
+        while (!queue.isEmpty()) {
+
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+
+                TreeNode node = queue.poll();
+
+                // Last node of this level
+                if (i == size - 1) {
+                    result.add(node.val);
+                }
+                // Add Left Child First as Queue follow FIFO
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                // Then Add Right Child
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+        }
+
+        return result;
     }
 }
