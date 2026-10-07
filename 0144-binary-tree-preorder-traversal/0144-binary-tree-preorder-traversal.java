@@ -14,28 +14,37 @@
  * }
  */
 class Solution {
-
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<>();
 
-        if(root == null)    return list;
-        
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        stack.push(root);
-
-        while(!stack.isEmpty()){
-            root = stack.pop();
-            list.add(root.val);
-            // Push Right Child
-            if(root.right != null) {
-                stack.push(root.right);
+        TreeNode curr = root;
+        while(curr != null){
+            // Case 1: No left subtree, Visit current node and move to the right
+            if(curr.left == null){
+                list.add(curr.val);
+                curr = curr.right;
             }
-            // Push Left Child
-            if(root.left != null) {
-                stack.push(root.left);
+            // Case 2: Left subtree exists
+            else{
+                // Find the preorder predecessor of curr = rightmost node in curr's left subtree
+                TreeNode prev = curr.left;
+                while(prev.right != null && prev.right != curr){
+                    prev = prev.right;
+                }
+
+                // First time visiting curr
+                if(prev.right == null){
+                    prev.right = curr; // Create a temporary thread from predecessor to curr
+                    list.add(curr.val); // Now visit curr
+                    curr = curr.left; // Move to the left subtree
+                }
+                // Second time reaching curr
+                else{
+                    prev.right = null; // Remove the temporary thread
+                    curr = curr.right; // Move to the right subtree
+                }
             }
         }
         return list;
     }
-
 }
