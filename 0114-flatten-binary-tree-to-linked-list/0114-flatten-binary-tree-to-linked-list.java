@@ -13,29 +13,35 @@
  *     }
  * }
  */
-
- // Stack Based Approach
-
 class Solution {
     public void flatten(TreeNode root) {
-        Stack<TreeNode> st = new Stack<>();
-        // Base Case
-        if(root == null)    return;
 
-        st.push(root);
-        while(!st.isEmpty()){
-            TreeNode curr = st.peek();
-            st.pop();
+        TreeNode curr = root;
 
-            if(curr.right != null)
-                st.push(curr.right);
-            if(curr.left != null)
-                st.push(curr.left);
+        while (curr != null) {
 
-            if(!st.isEmpty()){
-                curr.right = st.peek();
+            // If left subtree exists
+            if (curr.left != null) {
+
+                // Find the rightmost node of left subtree
+                TreeNode prev = curr.left;
+
+                while (prev.right != null) {
+                    prev = prev.right;
+                }
+
+                // Connect right subtree after left subtree
+                prev.right = curr.right;
+
+                // Move left subtree to right
+                curr.right = curr.left;
+
+                // Remove left child
+                curr.left = null;
             }
-            curr.left = null;
+
+            // Move to next node
+            curr = curr.right;
         }
     }
 }
