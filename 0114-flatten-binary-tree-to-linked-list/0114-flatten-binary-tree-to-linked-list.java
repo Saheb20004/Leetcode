@@ -14,21 +14,28 @@
  * }
  */
 
+ // Stack Based Approach
 
- // Reverse PreOrder -> Right Left Root
 class Solution {
-    TreeNode prev = null;
-
     public void flatten(TreeNode root) {
+        Stack<TreeNode> st = new Stack<>();
         // Base Case
         if(root == null)    return;
 
-        flatten(root.right);
-        flatten(root.left);
+        st.push(root);
+        while(!st.isEmpty()){
+            TreeNode curr = st.peek();
+            st.pop();
 
-        root.left = null;
-        root.right = prev;
-        
-        prev = root;
+            if(curr.right != null)
+                st.push(curr.right);
+            if(curr.left != null)
+                st.push(curr.left);
+
+            if(!st.isEmpty()){
+                curr.right = st.peek();
+            }
+            curr.left = null;
+        }
     }
 }
