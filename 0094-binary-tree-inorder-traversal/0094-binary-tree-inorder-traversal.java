@@ -15,26 +15,35 @@
  */
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> result = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> list = new ArrayList<>();
 
         TreeNode curr = root;
-
-        while (curr != null || !stack.isEmpty()) {
-
-            // 1. Go as far left as possible
-            while (curr != null) {
-                stack.push(curr);
-                curr = curr.left;
+        while(curr != null){
+            // Case 1: No left subtree, Visit current node and move to the right
+            if(curr.left == null){
+                list.add(curr.val);
+                curr = curr.right;
             }
+            // Case 2: Left subtree exists
+            else{
+                TreeNode prev = curr.left;
+                while(prev.right != null && prev.right != curr){
+                    prev = prev.right;
+                }
 
-            // 2. Process the node
-            curr = stack.pop();
-            result.add(curr.val);
-
-            // 3. Move to the right subtree
-            curr = curr.right;
+                // First time visiting curr
+                if(prev.right == null){
+                    prev.right = curr; // Create a temporary thread from predecessor to curr
+                    curr = curr.left; // Move to the left subtree
+                }
+                // Second time reaching curr
+                else{
+                    prev.right = null; // Remove the temporary thread
+                    list.add(curr.val); // Now visit curr
+                    curr = curr.right; // Move to the right subtree
+                }
+            }
         }
-        return result;
+        return list;
     }
 }
