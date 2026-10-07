@@ -26,6 +26,7 @@ class Solution {
             }
             // Case 2: Left subtree exists
             else{
+                // Find the inorder predecessor of curr = rightmost node in curr's left subtree
                 TreeNode prev = curr.left;
                 while(prev.right != null && prev.right != curr){
                     prev = prev.right;
