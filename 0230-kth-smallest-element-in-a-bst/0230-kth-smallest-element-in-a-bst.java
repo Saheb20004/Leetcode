@@ -15,45 +15,48 @@
  */
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
-        List<Integer> list = new ArrayList<>();
-        inorder(root, list);
-
-        return list.get(k-1);
-    }
-
-    
-    public void inorder(TreeNode root, List<Integer> list) {
 
         TreeNode curr = root;
-        while(curr != null){
+        while (curr != null) {
             // Case 1: No left subtree, Visit current node and move to the right
-            if(curr.left == null){
-                list.add(curr.val);
+            if (curr.left == null) {
+
+                k--;
+                if (k == 0) { // kth smallest found
+                    return curr.val;
+                }
+
                 curr = curr.right;
             }
+
             // Case 2: Left subtree exists
-            else{
-                // Find the inorder predecessor of curr = rightmost node in curr's left subtree
+            else {
+                // Find the inorder predecessor of curr = rightmost node in curr's left ST
                 TreeNode prev = curr.left;
-                while(prev.right != null && prev.right != curr){
+                while (prev.right != null && prev.right != curr) {
                     prev = prev.right;
                 }
 
-                // First time visiting curr
-                if(prev.right == null){
-                    prev.right = curr; // Create a temporary thread from predecessor to curr
-                    curr = curr.left; // Move to the left subtree
+                // Create temporary thread
+                if (prev.right == null) {
+                    prev.right = curr;
+                    curr = curr.left;
                 }
-                // Second time reaching curr
-                else{
-                    prev.right = null; // Remove the temporary thread
-                    list.add(curr.val); // Now visit curr
-                    curr = curr.right; // Move to the right subtree
+
+                // Thread already exists → visit curr
+                else {
+                    prev.right = null;
+
+                    k--;
+                    if (k == 0) {
+                        return curr.val;
+                    }
+
+                    curr = curr.right;
                 }
             }
         }
-        
+
+        return -1;
     }
-
-
 }
