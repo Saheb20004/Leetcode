@@ -21,11 +21,26 @@ class Solution {
         return list.get(k-1);
     }
 
-    private void inorder(TreeNode root, List<Integer> list){
-        if(root == null)    return;
+    private void inorder(TreeNode root, List<Integer> list) {
+        Stack<TreeNode> stack = new Stack<>();
 
-        inorder(root.left, list);
-        list.add(root.val);
-        inorder(root.right, list);
+        TreeNode curr = root;
+
+        while (curr != null || !stack.isEmpty()) {
+
+            // 1. Go as far left as possible
+            while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            // 2. Process the node
+            curr = stack.pop();
+            list.add(curr.val);
+
+            // 3. Move to the right subtree
+            curr = curr.right;
+        }
     }
+
 }
