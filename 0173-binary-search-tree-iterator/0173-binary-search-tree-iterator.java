@@ -32,12 +32,12 @@ class BSTIterator {
         return !st.isEmpty();
     }
 
-    private TreeNode pushAll(TreeNode root){
+    private void pushAll(TreeNode root){
         while(root != null){
             st.push(root);
             root = root.left;
         }
-        return root;
+        //return root;
     }
 }
 
