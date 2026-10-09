@@ -13,27 +13,47 @@
  *     }
  * }
  */
+
 class Solution {
     public TreeNode bstFromPreorder(int[] preorder) {
-        TreeNode root = null;
+        int inorder[] = preorder.clone();
+        Arrays.sort(inorder);
+        
+        int m = preorder.length;
+        int n = inorder.length;
 
-        for(int val : preorder){
-            root = insert(root, val);
+        Map<Integer, Integer> inMap = new HashMap<>();
+        // InOrder Mapping with its indexes
+        for(int i = 0; i < inorder.length;i++){
+            inMap.put(inorder[i], i);
         }
+
+        TreeNode root = helper(preorder, 0, m-1, inorder, 0, n-1, inMap);
         return root;
     }
 
-    private TreeNode insert(TreeNode root, int val){
-        if(root == null){
-            return new TreeNode(val);
-        }
 
-        if(root.val < val)
-            root.right =  insert(root.right, val);
-        
-        else
-            root.left = insert(root.left, val);
-        
+    private TreeNode helper(int[] preorder, int preStart, int preEnd,
+                            int[] inorder, int inStart, int inEnd,
+                            Map<Integer, Integer> inMap) 
+    {
+        // Base Case
+        if(preStart > preEnd || inStart > inEnd)    return null;
+
+        TreeNode root = new TreeNode(preorder[preStart]);
+
+        int inRoot = inMap.get(root.val);
+        int numsLeft = inRoot - inStart;
+
+        // Buid Left SubTree
+        root.left = helper(preorder, preStart + 1, preStart + numsLeft,
+                           inorder, inStart, inRoot - 1, inMap);
+
+        // Build Right SubTree
+        root.right = helper(preorder, preStart + numsLeft + 1, preEnd,
+                           inorder, inRoot + 1, inEnd, inMap);
+
         return root;
     }
+    
 }
