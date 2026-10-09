@@ -13,42 +13,28 @@
  *     }
  * }
  */
-import java.util.*;
-
 class Solution {
+    int i = 0;
+
     public TreeNode bstFromPreorder(int[] preorder) {
-
-        int[] inorder = preorder.clone();
-        Arrays.sort(inorder);
-
-        Map<Integer, Integer> map = new HashMap<>();
-
-        for (int i = 0; i < inorder.length; i++) {
-            map.put(inorder[i], i);
-        }
-
-        int[] preIndex = {0};
-
-        return build(preorder, 0, inorder.length - 1, preIndex, map);
+        i = 0;
+        return build(preorder, Long.MAX_VALUE);
     }
 
-    private TreeNode build(int[] preorder, int left, int right,
-                           int[] preIndex, Map<Integer, Integer> map) {
-
-        if (left > right) {
+    private TreeNode build(int[] preorder, long upperBound) {
+        // All elements have been processed or  This value belongs to another subtree
+        if (i == preorder.length || preorder[i] > upperBound) {
             return null;
         }
 
-        // First unused preorder element is the root
-        int rootVal = preorder[preIndex[0]++];
-        TreeNode root = new TreeNode(rootVal);
+        // Create the current root
+        TreeNode root = new TreeNode(preorder[i]);
+        i++;
 
-        // Find root position in inorder
-        int mid = map.get(rootVal);
-
-        // Construct left and right subtrees
-        root.left = build(preorder, left, mid - 1, preIndex, map);
-        root.right = build(preorder, mid + 1, right, preIndex, map);
+        // Construct left subtree
+        root.left = build(preorder, root.val);
+        // Construct right subtree
+        root.right = build(preorder, upperBound);
 
         return root;
     }
