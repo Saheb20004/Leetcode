@@ -14,37 +14,71 @@
  * }
  */
 
+
 class Solution {
     public boolean findTarget(TreeNode root, int k) {
-        List<Integer> list = new ArrayList<>();
-        inorder(root, list); // First find Inorder Traversal
+        BSTIterator forward = new BSTIterator(root, true);
+        BSTIterator backward = new BSTIterator(root, false);
 
-        // then Apply binary Search
-        int left = 0;
-        int right = list.size() - 1;
+        int left = forward.next();
+        int right = backward.next();
 
         while (left < right) {
-            int sum = list.get(left) + list.get(right);
+            int sum = left + right;
 
-            if (sum == k) 
+            if (sum == k) {
                 return true;
-            else if (sum < k) 
-                left++;
-            else 
-                right--;
-            
+            } else if (sum < k) {
+                if (!forward.hasNext()) {
+                    return false;
+                }
+                left = forward.next();
+            } else {
+                if (!backward.hasNext()) {
+                    return false;
+                }
+                right = backward.next();
+            }
         }
 
         return false;
     }
+}
 
-    private void inorder(TreeNode root, List<Integer> list) {
-        if (root == null) {
-            return;
+class BSTIterator {
+    private Stack<TreeNode> stack = new Stack<>();
+    private boolean forward;
+
+    public BSTIterator(TreeNode root, boolean forward) {
+        this.forward = forward;
+        pushAll(root);
+    }
+
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+
+    public int next() {
+        TreeNode node = stack.pop();
+
+        if (forward) {
+            pushAll(node.right);
+        } else {
+            pushAll(node.left);
         }
 
-        inorder(root.left, list);
-        list.add(root.val);
-        inorder(root.right, list);
+        return node.val;
+    }
+
+    private void pushAll(TreeNode node) {
+        while (node != null) {
+            stack.push(node);
+
+            if (forward) {
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
     }
 }
