@@ -13,47 +13,43 @@
  *     }
  * }
  */
+import java.util.*;
 
 class Solution {
     public TreeNode bstFromPreorder(int[] preorder) {
-        int inorder[] = preorder.clone();
-        Arrays.sort(inorder);
-        
-        int m = preorder.length;
-        int n = inorder.length;
 
-        Map<Integer, Integer> inMap = new HashMap<>();
-        // InOrder Mapping with its indexes
-        for(int i = 0; i < inorder.length;i++){
-            inMap.put(inorder[i], i);
+        int[] inorder = preorder.clone();
+        Arrays.sort(inorder);
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i], i);
         }
 
-        TreeNode root = helper(preorder, 0, m-1, inorder, 0, n-1, inMap);
-        return root;
+        int[] preIndex = {0};
+
+        return build(preorder, 0, inorder.length - 1, preIndex, map);
     }
 
+    private TreeNode build(int[] preorder, int left, int right,
+                           int[] preIndex, Map<Integer, Integer> map) {
 
-    private TreeNode helper(int[] preorder, int preStart, int preEnd,
-                            int[] inorder, int inStart, int inEnd,
-                            Map<Integer, Integer> inMap) 
-    {
-        // Base Case
-        if(preStart > preEnd || inStart > inEnd)    return null;
+        if (left > right) {
+            return null;
+        }
 
-        TreeNode root = new TreeNode(preorder[preStart]);
+        // First unused preorder element is the root
+        int rootVal = preorder[preIndex[0]++];
+        TreeNode root = new TreeNode(rootVal);
 
-        int inRoot = inMap.get(root.val);
-        int numsLeft = inRoot - inStart;
+        // Find root position in inorder
+        int mid = map.get(rootVal);
 
-        // Buid Left SubTree
-        root.left = helper(preorder, preStart + 1, preStart + numsLeft,
-                           inorder, inStart, inRoot - 1, inMap);
-
-        // Build Right SubTree
-        root.right = helper(preorder, preStart + numsLeft + 1, preEnd,
-                           inorder, inRoot + 1, inEnd, inMap);
+        // Construct left and right subtrees
+        root.left = build(preorder, left, mid - 1, preIndex, map);
+        root.right = build(preorder, mid + 1, right, preIndex, map);
 
         return root;
     }
-    
 }
