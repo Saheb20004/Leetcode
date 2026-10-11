@@ -1,22 +1,21 @@
+
 class Solution {
     public int findKthLargest(int[] nums, int k) {
-        Arrays.sort(nums); // Sort in ascending order
-        // Reverse the sorting into an descending order
-        reverse(nums);
+        // Min-heap (default PriorityQueue): root = smallest element in the heap.
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 
-        return nums[k-1];
-    }
+        for (int x : nums) {
+            minHeap.add(x);
 
-    private void reverse(int[] nums) {
-        int l = 0, r = nums.length - 1;
-        while (l < r) {
-            swap(nums, l++, r--);
+            // Keep only the k largest values seen so far.
+            // The smallest of k+1 values can't be in the top k, so drop it.
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
         }
-    }
 
-    private void swap(int nums[], int i, int j){
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+        // The heap now holds the k largest values;
+        // its root is the smallest of them, i.e. the k-th largest overall.
+        return minHeap.peek();
     }
 }
