@@ -1,36 +1,24 @@
-import java.util.*;
-
 class Solution {
     public long maxAlternatingSum(int[] nums) {
-        int n = nums.length;
-        int[] absArr = new int[n];
-        
-        // Step 1: Take absolute values
-        for (int i = 0; i < n; i++) {
-            absArr[i] = Math.abs(nums[i]);
-        }
+        // Step 1: square every number (long, so it cannot overflow)
+        long[] a = new long[nums.length];
+        for (int i = 0; i < nums.length; i++)
+            a[i] = (long) nums[i] * nums[i];
 
-        // Step 2: Sort in ascending order
-        Arrays.sort(absArr);
+        // Step 2: sort — smallest on the left, biggest on the right
+        Arrays.sort(a);
 
-        // Step 3: Use two pointers to alternate large-small selection
-        int left = 0, right = n - 1;
-        boolean add = true;
-        long score = 0;
+        long ans = 0;
+        int k = nums.length / 2;   // number of minus places
 
-        while (left <= right) {
-            long val;
-            if (add) {
-                val = 1L * absArr[right] * absArr[right]; // largest abs → add
-                right--;
-            } else {
-                val = 1L * absArr[left] * absArr[left]; // smallest abs → subtract
-                left++;
-            }
-            score += add ? val : -val;
-            add = !add;
-        }
+        // Step 3: subtract the k smallest squares
+        for (int i = 0; i < k; i++)
+            ans -= a[i];
 
-        return score;
+        // Step 4: add all the bigger squares
+        for (int i = k; i < nums.length; i++)
+            ans += a[i];
+
+        return ans;
     }
 }
