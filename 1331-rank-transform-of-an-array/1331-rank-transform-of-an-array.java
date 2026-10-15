@@ -1,30 +1,31 @@
-
 class Solution {
     public int[] arrayRankTransform(int[] arr) {
-        int n = arr.length;
+        // Min Heap stores values in ascending order
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 
-        // Create a copy to preserve the original element order
-        int[] sorted = arr.clone();
+        // Insert all elements into the heap
+        for (int num : arr) {
+            minHeap.offer(num);
+        }
 
-        // Sort values in ascending order
-        Arrays.sort(sorted);
-
-        // Map each distinct value to its rank
+        // Store the rank of each distinct value
         Map<Integer, Integer> rankMap = new HashMap<>();
 
         int rank = 1;
 
-        for (int i = 0; i < n; i++) {
+        // Extract elements from smallest to largest
+        while (!minHeap.isEmpty()) {
+            int smallest = minHeap.poll();
 
-            // Assign a rank only to new distinct values
-            if (!rankMap.containsKey(sorted[i])) {
-                rankMap.put(sorted[i], rank);
+            // Assign a rank only if this value is new
+            if (!rankMap.containsKey(smallest)) {
+                rankMap.put(smallest, rank);
                 rank++;
             }
         }
 
-        // Replace each original value with its rank
-        for (int i = 0; i < n; i++) {
+        // Replace each element with its rank
+        for (int i = 0; i < arr.length; i++) {
             arr[i] = rankMap.get(arr[i]);
         }
 
