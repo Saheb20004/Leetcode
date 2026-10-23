@@ -1,54 +1,33 @@
 
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-
-        // Count the frequency of each task
+        // Count the frequency of each task A-Z
         int[] freq = new int[26];
 
         for (char task : tasks) {
             freq[task - 'A']++;
         }
 
-        // Max Heap: highest frequency comes first
-        PriorityQueue<Integer> maxHeap =
-            new PriorityQueue<>(Collections.reverseOrder());
+        // Find the maximum task frequency
+        int maxFreq = 0;
 
         for (int count : freq) {
-            if (count > 0) {
-                maxHeap.offer(count);
+            maxFreq = Math.max(maxFreq, count);
+        }
+
+        // Count how many tasks have the maximum frequency
+        int maxCount = 0;
+
+        for (int count : freq) {
+            if (count == maxFreq) {
+                maxCount++;
             }
         }
 
-        // Queue stores {remainingFrequency, availableTime}
-        Queue<int[]> cooldown = new LinkedList<>();
+        // Minimum intervals needed to arrange the most frequent tasks
+        int intervals = (maxFreq - 1) * (n + 1) + maxCount;
 
-        int time = 0;
-
-        // Continue until all tasks are completed
-        while (!maxHeap.isEmpty() || !cooldown.isEmpty()) {
-
-            // Execute the most frequent available task
-            if (!maxHeap.isEmpty()) {
-                int remaining = maxHeap.poll() - 1;
-
-                // If occurrences remain, put task in cooldown
-                if (remaining > 0) {
-                    cooldown.offer(
-                        new int[]{remaining, time + n + 1}
-                    );
-                }
-            }
-
-            // One CPU interval has passed
-            time++;
-
-            // Move tasks back into the heap when cooldown ends
-            if (!cooldown.isEmpty()
-                    && cooldown.peek()[1] <= time) {
-                maxHeap.offer(cooldown.poll()[0]);
-            }
-        }
-
-        return time;
+        // Other tasks may fill idle intervals
+        return Math.max(tasks.length, intervals);
     }
 }
